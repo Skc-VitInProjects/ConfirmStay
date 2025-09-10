@@ -15,10 +15,18 @@ const ejsMate = require("ejs-mate");
 const session = require("express-session");
 const flash = require("connect-flash");
 
+//require passport for authentication
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+
+//user model 
+const User = require("./models/user.js");
+
 
 //routes ---> all the routes(create , update , show , delete)
 const listings = require("./routes/listing.js");
 const reviews = require("./routes/review.js");
+const users = require("./routes/user.js");
 
 //....................
 //copy-pasted from mongoosejs.com
@@ -69,6 +77,14 @@ app.get("/", (req, res) => {
 app.use(session(sessionOptions));
 app.use(flash());
 
+//passport ko use krna hai
+app.use(passport.initialize());   //middleware for passport
+app.use(passport.session());  //same user ka session 
+passport.use(new LocalStrategy(User.authenticate())); //user ko authenticate krwaana
+
+passport.serializeUser(User.serializeUser());     //jb tk user ka session chal rha hai tb tk user ko serialize krenge
+passport.deserializeUser(User.deserializeUser());  //jb user ka session end hota hai, tb user ko deserialize kr dete hain
+
 //---Middleware for session, flash
 app.use((req, res , next) => {
      res.locals.success = req.flash("success");
@@ -76,6 +92,8 @@ app.use((req, res , next) => {
      next();
 });
 
+//----------------Users----------------
+app.use("/" , users);
 
 //------Listings----------
 //listing routes ---> create , update , show , delete route at routes/listing.js
