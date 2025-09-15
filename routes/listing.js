@@ -27,7 +27,8 @@ const validateListing = (req, res, next) => {
 //requiring listing from models folder
 const Listing = require("../models/listing.js");
 
-
+//requiring isLoggedIn --> to check if the user is loggedIn
+const {isLoggedIn} = require("../middleware.js");
 
 //Index Route
 router.get("/", wrapAsync(async (req, res) => {
@@ -36,8 +37,11 @@ router.get("/", wrapAsync(async (req, res) => {
 }));
 
 //New Route
-router.get("/new", (req, res) => {
+router.get("/new", isLoggedIn, (req, res) => {
+  console.log(req.user);
+  
   res.render("listings/new.ejs");
+ 
 });
 
 //Show Route
@@ -55,7 +59,7 @@ router.get("/:id", wrapAsync(async (req, res) => {
 }));
 
 //Create Route
-router.post("/", validateListing, wrapAsync(async (req, res, next) => {
+router.post("/", isLoggedIn, validateListing, wrapAsync(async (req, res, next) => {
   //let {title , description ,image ,price , location , country } = req.body;
   //let listing = req.body.listing;
 
@@ -95,7 +99,7 @@ router.post("/", validateListing, wrapAsync(async (req, res, next) => {
 }));
 
 //Edit Route
-router.get("/:id/edit", wrapAsync(async (req, res) => {
+router.get("/:id/edit",isLoggedIn, wrapAsync(async (req, res) => {
   let { id } = req.params;
   const listing = await Listing.findById(id);
 
@@ -109,7 +113,7 @@ router.get("/:id/edit", wrapAsync(async (req, res) => {
 }));
 
 //Update Route
-router.put("/:id", validateListing, wrapAsync(async (req, res) => {
+router.put("/:id", isLoggedIn, validateListing, wrapAsync(async (req, res) => {
   // if(!req.body.listing){
   //    throw new ExpressError(400 , "Send valid data");
   // }
@@ -122,7 +126,7 @@ router.put("/:id", validateListing, wrapAsync(async (req, res) => {
 }));
 
 //Delete Route
-router.delete("/:id", wrapAsync(async (req, res) => {
+router.delete("/:id", isLoggedIn, wrapAsync(async (req, res) => {
   let { id } = req.params;
   await Listing.findByIdAndDelete(id);
 
