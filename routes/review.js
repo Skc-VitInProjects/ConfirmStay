@@ -6,27 +6,12 @@ const wrapAsync = require("../utils/wrapAsync.js");
 const ExpressError = require("../utils/ExpressError.js");
 
 
-//Schema Validation (Server-side validation)
-const {listingSchema , reviewSchema} = require("../schema.js");
-
-
-//Middleware for Schema Validation (Server Side Validation)
-const validateReview = (req , res , next) => {
-     let result = reviewSchema.validate(req.body);
-
-     if(result.error){
-          let errMsg = result.error.details.map((el) => el.message).join(",");
-          throw new ExpressError(400, errMsg);
-     }else{
-          next();
-     }
-}
-
 //requiring review model from models folder
 const Listing = require("../models/listing.js");
 const Review = require("../models/review.js");
 
-
+//middlewares 
+const {validateReview} = require("../middleware.js");
 
 //Add Review
 router.post("/" , validateReview , wrapAsync(async(req, res)=> {
