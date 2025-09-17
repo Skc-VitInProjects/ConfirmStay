@@ -1,4 +1,5 @@
 const Listing = require("./models/listing"); //to check isOwner
+const Review = require("./models/review"); //to check isAuthor
 const ExpressError = require("./utils/ExpressError.js");
 const { listingSchema, reviewSchema } = require("./schema.js");  //Schema Validation (Server-side validation)
 
@@ -57,8 +58,22 @@ module.exports.isOwner = async(req , res , next) => {
   let {id} = req.params;
   let listing = await Listing.findById(id);
   if(!listing.owner.equals(res.locals.currUser._id)){ //authorization setup 
-     req.flash("error" , "Permission denied!");
+     req.flash("error" , "Owner has access!");
      return res.redirect(`/listings/${id}`);
+  }
+
+  next();
+}
+
+//Authorization for review (deletion)
+module.exports.isAuthor = async(req, res, next) => {
+
+  let {id , reviewId} = req.params;
+  let review = await Review.findById(reviewId);
+
+  if(!review.author.equals(res.locals.currUser._id)){
+    req.flash("error" , "Author has access!");
+    return res.redirect(`/listings/${id}`);
   }
 
   next();
