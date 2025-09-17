@@ -28,7 +28,7 @@ const validateListing = (req, res, next) => {
 const Listing = require("../models/listing.js");
 
 //requiring isLoggedIn --> to check if the user is loggedIn
-const {isLoggedIn} = require("../middleware.js");
+const { isLoggedIn } = require("../middleware.js");
 
 //Index Route
 router.get("/", wrapAsync(async (req, res) => {
@@ -39,15 +39,17 @@ router.get("/", wrapAsync(async (req, res) => {
 //New Route
 router.get("/new", isLoggedIn, (req, res) => {
   console.log(req.user);
-  
+
   res.render("listings/new.ejs");
- 
+
 });
 
 //Show Route
 router.get("/:id", wrapAsync(async (req, res) => {
   let { id } = req.params;
-  const listing = await Listing.findById(id).populate("reviews");
+  const listing = await Listing.findById(id)
+    .populate("reviews")
+    .populate("owner");
 
   if (!listing) {
     req.flash("error", "Listing you requested for does not exist !");
@@ -87,6 +89,8 @@ router.post("/", isLoggedIn, validateListing, wrapAsync(async (req, res, next) =
   //     if(!addListing.country){
   //      throw new ExpressError(400 , "Country is missing");
   //     }
+  
+  addListing.owner = req.user._id;
 
   await addListing.save();
 
@@ -99,7 +103,7 @@ router.post("/", isLoggedIn, validateListing, wrapAsync(async (req, res, next) =
 }));
 
 //Edit Route
-router.get("/:id/edit",isLoggedIn, wrapAsync(async (req, res) => {
+router.get("/:id/edit", isLoggedIn, wrapAsync(async (req, res) => {
   let { id } = req.params;
   const listing = await Listing.findById(id);
 

@@ -26,7 +26,11 @@ const listingSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "Review"
        }
-    ]
+    ],
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "User"
+    }
 });
 
 //middleware (post-run)  //findByIdAndDelete from app.js calls the findOneAndDelete , which deletes all the reviews related to the listing, if i delete that listing
