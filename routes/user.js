@@ -20,20 +20,22 @@ const { saveRedirectUrl } = require("../middleware.js");
 
 
 //-----------Signup----------------------
-//New Route
-router.get("/signup" , userController.renderSignupForm);
+router.route("/signup")
+    //New Route
+    .get(userController.renderSignupForm)
 
-//Create Route
-router.post("/signup" , wrapAsync(userController.signupUser));
+    //Create Route
+    .post(wrapAsync(userController.signupUser));
 
 
 
 //--------------Login---------------
-//
-router.get("/login" , userController.renderLoginForm);
+router.route("/login")
+    //
+    .get(userController.renderLoginForm)
 
-//
-router.post("/login",
+   //
+   .post(
            saveRedirectUrl, //check middleware.js
            passport.authenticate("local" , {
                failureRedirect: "/login" ,
