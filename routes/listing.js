@@ -12,6 +12,9 @@ const Listing = require("../models/listing.js");
 //requiring controllers from controlers folder for the listing
 const listingController = require("../controllers/listings.js");
 
+//requiring multer to parse files(images,.etc)
+const multer = require("multer");
+const upload = multer({ dest: "uploads/"});
 
 //-----middleware checks is user Login, owner, listing is validated
 //requiring isLoggedIn --> to check if the user is loggedIn

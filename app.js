@@ -1,3 +1,11 @@
+//dotenv module for processing env
+
+if(process.env.NODE_ENV != "production"){
+   require("dotenv").config();
+}
+
+console.log(process.env);
+
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -10,7 +18,7 @@ const methodOverride = require("method-override");
 
 //Requiring ejs for the Express
 const ejsMate = require("ejs-mate");
-
+ 
 //requiring the express-session , connect-flash
 const session = require("express-session");
 const flash = require("connect-flash");
