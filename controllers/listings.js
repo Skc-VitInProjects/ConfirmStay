@@ -49,6 +49,8 @@ module.exports.createListing = async (req, res, next) => {
   //        throw new ExpressError(400 , "Bad Request : Send valid data");
   //     }
 
+  let url = req.file.path;  //cloudinary path where image is getting saved
+  let filename = req.file.filename; 
 
   const addListing = new Listing(req.body.listing);
 
@@ -69,7 +71,9 @@ module.exports.createListing = async (req, res, next) => {
   //     }
 
   addListing.owner = req.user._id;
-
+  
+  addListing.image = {url , filename};
+  
   await addListing.save();
 
   req.flash("success", "New Listing Created !"); //listing create hone ke baad flash message bhejenge
