@@ -14,7 +14,9 @@ const listingController = require("../controllers/listings.js");
 
 //requiring multer to parse files(images,.etc)
 const multer = require("multer");
-const upload = multer({ dest: "uploads/"});
+const {storage} = require("../cloudConfig.js");  //requiring cloudinary and storage from cloudConfig.js
+const upload = multer({storage});            //const upload = multer({ dest: "uploads/"});
+
 
 //-----middleware checks is user Login, owner, listing is validated
 //requiring isLoggedIn --> to check if the user is loggedIn
