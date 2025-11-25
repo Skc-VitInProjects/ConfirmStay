@@ -34,7 +34,11 @@ const listingSchema = new Schema({
     owner: {
       type: Schema.Types.ObjectId,
       ref: "User"
-    }
+    },
+    // category:{
+    //   type: String,
+    //   enum: ["Mountains" , "Arctic" , "Farms" , "Deserts" , ]
+    // }
 });
 
 //middleware (post-run)  //findByIdAndDelete from app.js calls the findOneAndDelete , which deletes all the reviews related to the listing, if i delete that listing
