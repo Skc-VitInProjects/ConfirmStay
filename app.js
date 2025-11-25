@@ -78,9 +78,9 @@ const sessionOptions = {
 
 
 //root route
-app.get("/", (req, res) => {
-     res.send("Hi , I am a root");
-});
+// app.get("/", (req, res) => {
+//      res.send("Hi , I am a root");
+// });
 
 //we will use session and flash after the root route
 app.use(session(sessionOptions));
