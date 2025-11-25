@@ -20,8 +20,9 @@ const methodOverride = require("method-override");
 //Requiring ejs for the Express
 const ejsMate = require("ejs-mate");
  
-//requiring the express-session , connect-flash
+//requiring the express-session , connect-flash 
 const session = require("express-session");
+const MongoStore = require("connect-mongo");  //connect-mongo for mongo session store
 const flash = require("connect-flash");
 
 //require passport for authentication
@@ -66,7 +67,22 @@ app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
 
+//we will use mongo session store
+const store = MongoStore.create({
+     mongoUrl: dbUrl,
+     crypto:{
+          secret: "mysupersecretcode"
+     },
+     touchAfter: 24 * 3600,//agar particular session mein kuch ho hi nhi rha , toh we will update our session after 24 hrs
+
+});
+
+store.on("error", ()=>{
+    console.log("ERROR in MONGO SESSION STORE", error);
+});
+
 const sessionOptions = {
+     store: store,
      secret: "mysupersecretcode",
      resave: false,
      saveUninitialized: true,
@@ -80,11 +96,11 @@ const sessionOptions = {
 
 //.............................................................
 
-
 //root route
 // app.get("/", (req, res) => {
 //      res.send("Hi , I am a root");
 // });
+
 
 //we will use session and flash after the root route
 app.use(session(sessionOptions));
